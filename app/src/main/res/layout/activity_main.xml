@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sea_foam_color"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/timerIcon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_timer_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/timer_logo_description" />
+
+    <TextView
+        android:id="@+id/appName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/good_times_rg"
+        android:textStyle = "bold"
+        android:textSize="20sp"
+        android:text="@string/app_name"
+        app:layout_constraintLeft_toLeftOf="@id/timerIcon"
+        app:layout_constraintTop_toBottomOf="@+id/timerIcon" />
+
+    <ImageView
+        android:id="@+id/settingsButton"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_settings_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/settings_button" />
+
+    <FrameLayout
+        android:id="@+id/circleLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="50dp"
+        android:background="@drawable/ic_circle"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/timerValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="40sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/bruce_forever_regular"
+            android:text=""
+            tools:ignore="HardcodedText" />
+    </FrameLayout>
+
+
+    <Button
+        android:id="@+id/mainButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_marginBottom="96dp"
+        android:backgroundTint = "@color/light_blue"
+        android:text="@string/main_button_start"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/restartIV"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/ic_restart"
+        android:contentDescription="@string/restart_button"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toEndOf="@id/mainButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/mainButton"
+        app:layout_constraintTop_toTopOf="@id/mainButton"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
