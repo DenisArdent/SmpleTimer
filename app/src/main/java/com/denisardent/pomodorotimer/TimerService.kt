@@ -139,7 +139,7 @@ class TimerService : Service() {
             )
             .setColorized(true)
             .setColor(Color.parseColor("#A7DBFF"))
-            .setSmallIcon(R.drawable.ic_timer_logo)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setOnlyAlertOnce(true)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)

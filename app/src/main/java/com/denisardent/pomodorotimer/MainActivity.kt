@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        // Moving the service to background when the app is visible
         moveToBackground()
     }
 
@@ -46,7 +45,6 @@ class MainActivity : AppCompatActivity() {
 
         getTimerStatus()
 
-        // Receiving stopwatch status from service
         val statusFilter = IntentFilter()
         statusFilter.addAction(TimerService.TIMER_STATUS)
         statusReceiver = object : BroadcastReceiver() {
@@ -61,7 +59,6 @@ class MainActivity : AppCompatActivity() {
         }
         registerReceiver(statusReceiver, statusFilter)
 
-        // Receiving time values from service
         val timeFilter = IntentFilter()
         timeFilter.addAction(TimerService.TIMER_TICK)
         timeReceiver = object : BroadcastReceiver() {
@@ -79,7 +76,6 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(statusReceiver)
         unregisterReceiver(timeReceiver)
 
-        // Moving the service to foreground when the app is in background / not visible
         moveToForeground()
     }
 
