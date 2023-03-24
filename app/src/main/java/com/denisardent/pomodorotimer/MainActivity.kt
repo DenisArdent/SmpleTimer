@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private var isTimerRunning = false
+    private var isTimerRunning = TIMER_PAUSED
 
     private lateinit var statusReceiver: BroadcastReceiver
     private lateinit var timeReceiver: BroadcastReceiver
@@ -26,11 +26,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.mainButton.setOnClickListener {
-            if (isTimerRunning) pauseTimer() else startTimer()
+            if (isTimerRunning == TIMER_RUNNING) pauseTimer() else startTimer()
         }
 
         binding.restartIV.setOnClickListener {
             resetTimer()
+            binding.mainButton.visibility = View.VISIBLE
         }
     }
 
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         statusFilter.addAction(TimerService.TIMER_STATUS)
         statusReceiver = object : BroadcastReceiver() {
             override fun onReceive(p0: Context?, p1: Intent?) {
-                val isRunning = p1?.getBooleanExtra(TimerService.IS_TIMER_RUNNING, false)!!
+                val isRunning = p1?.getStringExtra(TimerService.IS_TIMER_RUNNING)!!
                 isTimerRunning = isRunning
                 val timeElapsed = p1.getIntExtra(TimerService.REMAINING_TIME, 0)
 
@@ -86,13 +87,20 @@ class MainActivity : AppCompatActivity() {
             "${"%02d".format(minutes)}:${"%02d".format(seconds)}"
     }
 
-    private fun updateButtonsUI(isStopwatchRunning: Boolean) {
-        if (isStopwatchRunning) {
-            binding.mainButton.text = getString(R.string.main_button_pause)
-            binding.restartIV.visibility = View.INVISIBLE
-        } else {
-            binding.mainButton.text = getString(R.string.main_button_start)
-            binding.restartIV.visibility = View.VISIBLE
+    private fun updateButtonsUI(isTimerRunning: String) {
+        when (isTimerRunning) {
+            TIMER_RUNNING -> {
+                binding.mainButton.text = getString(R.string.main_button_pause)
+                binding.restartIV.visibility = View.INVISIBLE
+            }
+            TIMER_PAUSED ->{
+                binding.mainButton.text = getString(R.string.main_button_start)
+                binding.restartIV.visibility = View.VISIBLE
+            }
+            else -> {
+                binding.mainButton.visibility = View.INVISIBLE
+                binding.restartIV.visibility = View.VISIBLE
+            }
         }
     }
 

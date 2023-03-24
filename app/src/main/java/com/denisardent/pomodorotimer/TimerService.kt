@@ -9,9 +9,13 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import java.util.*
 
+const val TIMER_PAUSED = "TIMER_PAUSED"
+const val TIMER_RUNNING = "TIMER_RUNNING"
+const val TIMER_ENDED = "TIMER_ENDED"
+
 class TimerService : Service() {
     private var remainingTime: Int = 60
-    private var isTimerRunning = false
+    private var isTimerRunning = TIMER_PAUSED
 
     private var updateTimer = Timer()
     private var pomoTimer = Timer()
@@ -59,7 +63,7 @@ class TimerService : Service() {
     }
 
     private fun startTimer(){
-        isTimerRunning = true
+        isTimerRunning = TIMER_RUNNING
         sendStatus()
 
         pomoTimer = Timer()
@@ -80,7 +84,7 @@ class TimerService : Service() {
 
     private fun pauseTimer(){
         pomoTimer.cancel()
-        isTimerRunning = false
+        isTimerRunning = TIMER_PAUSED
         sendStatus()
     }
 
@@ -91,7 +95,8 @@ class TimerService : Service() {
     }
 
     private fun timerEnded(){
-        pauseTimer()
+        pomoTimer.cancel()
+        isTimerRunning = TIMER_ENDED
         remainingTime = 0
         sendStatus()
     }
@@ -119,10 +124,11 @@ class TimerService : Service() {
     }
 
     private fun buildNotification(): Notification{
-        val title = if (isTimerRunning){
-            "PomoTimer is running"
-        } else {
-            "Pomotimer is paused"
+        val title = when (isTimerRunning){
+            (TIMER_RUNNING) -> "PomoTimer is running"
+            (TIMER_PAUSED) ->  "PomoTimer is paused"
+            (TIMER_ENDED) -> "Pomotimer is ended"
+            else -> throw Exception("No info about timer status")
         }
 
         val minutes = remainingTime/60
@@ -139,7 +145,7 @@ class TimerService : Service() {
             )
             .setColorized(true)
             .setColor(Color.parseColor("#A7DBFF"))
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_timer_icon)
             .setOnlyAlertOnce(true)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -151,8 +157,7 @@ class TimerService : Service() {
     }
 
     private fun moveToForeground(){
-
-        if (isTimerRunning){
+        if (isTimerRunning== TIMER_RUNNING){
             startForeground(1,buildNotification())
 
             updateTimer = Timer()
@@ -169,6 +174,7 @@ class TimerService : Service() {
     }
 
     companion object{
+
         //constants for timer and intent
         const val CHANNEL_NOTIFICATION_ID = "TIMER_NOTIFICATION"
 
