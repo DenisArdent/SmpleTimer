@@ -8,13 +8,14 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import java.util.*
+import kotlin.properties.Delegates
 
 const val TIMER_PAUSED = "TIMER_PAUSED"
 const val TIMER_RUNNING = "TIMER_RUNNING"
 const val TIMER_ENDED = "TIMER_ENDED"
 
 class TimerService : Service() {
-    private var remainingTime: Int = 60
+    private var remainingTime = 0
     private var isTimerRunning = TIMER_PAUSED
 
     private var updateTimer = Timer()
@@ -37,7 +38,10 @@ class TimerService : Service() {
         val action = intent?.getStringExtra(TIMER_ACTION)!!
 
         when (action){
-            START -> startTimer()
+            START -> {
+                startTimer()
+                remainingTime = intent.getIntExtra(REMAINING_TIME, 60)
+            }
             PAUSE -> pauseTimer()
             RESET -> resetTimer()
             ENDED -> timerEnded()
@@ -90,7 +94,7 @@ class TimerService : Service() {
 
     private fun resetTimer(){
         pauseTimer()
-        remainingTime = 60
+        remainingTime = 0
         sendStatus()
     }
 
@@ -180,6 +184,7 @@ class TimerService : Service() {
 
         const val START ="START"
         const val PAUSE = "PAUSE"
+        const val CONTINUE = "CONTINUE"
         const val RESET = "RESET"
         const val ENDED = "ENDED"
         const val GET_STATUS = "GET_STATUS"

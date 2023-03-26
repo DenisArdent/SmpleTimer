@@ -39,7 +39,7 @@
         app:layout_constraintBottom_toBottomOf="@id/timerIcon"
         android:contentDescription="@string/settings_button" />
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/circleLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -52,6 +52,55 @@
         app:layout_constraintEnd_toEndOf="parent"
         >
 
+        <androidx.constraintlayout.widget.Group
+            android:id= "@+id/upButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="minutesFirstUpButton, minutesSecondUpButton, secondsFirstUpButton, secondsSecondUpButton"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/minutesFirstUpButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_arrow_up"
+            app:layout_constraintBottom_toTopOf="@id/timerValue"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/minutesSecondUpButton"
+            />
+
+        <ImageView
+            android:id="@+id/minutesSecondUpButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_arrow_up"
+            app:layout_constraintBottom_toTopOf="@id/timerValue"
+            app:layout_constraintLeft_toRightOf="@id/minutesFirstUpButton"
+            app:layout_constraintRight_toLeftOf="@id/secondsFirstUpButton"
+            />
+
+        <ImageView
+            android:id="@+id/secondsFirstUpButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_arrow_up"
+            app:layout_constraintBottom_toTopOf="@id/timerValue"
+            app:layout_constraintLeft_toRightOf="@id/minutesSecondUpButton"
+            app:layout_constraintRight_toLeftOf="@id/secondsSecondUpButton"
+            />
+
+        <ImageView
+            android:id="@+id/secondsSecondUpButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_arrow_up"
+            app:layout_constraintBottom_toTopOf="@id/timerValue"
+            app:layout_constraintLeft_toRightOf="@id/secondsFirstUpButton"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+
         <TextView
             android:id="@+id/timerValue"
             android:layout_width="wrap_content"
@@ -60,20 +109,62 @@
             android:textSize="40sp"
             android:textColor="@color/white"
             android:fontFamily="@font/bruce_forever_regular"
-            android:text=""
-            tools:ignore="HardcodedText" />
+            android:text="00:00"
+            tools:ignore="HardcodedText"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <EditText
-            android:id="@+id/editTimerValue"
+        <androidx.constraintlayout.widget.Group
+            android:id= "@+id/downButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="40sp"
-            android:textColor="@color/white"
-            android:fontFamily="@font/bruce_forever_regular"
-            android:text=""
-            tools:ignore="HardcodedText" />
-    </FrameLayout>
+            app:constraint_referenced_ids="minutesFirstDownButton, minutesSecondDownButton, secondsFirstDownButton, secondsSecondDownButton"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/minutesFirstDownButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_arrow_down"
+            app:layout_constraintTop_toBottomOf="@id/timerValue"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/minutesSecondDownButton"
+            />
+
+        <ImageView
+            android:id="@+id/minutesSecondDownButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_arrow_down"
+            app:layout_constraintTop_toBottomOf="@id/timerValue"
+            app:layout_constraintLeft_toRightOf="@id/minutesFirstDownButton"
+            app:layout_constraintRight_toLeftOf="@id/secondsFirstDownButton"
+            />
+
+        <ImageView
+            android:id="@+id/secondsFirstDownButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_arrow_down"
+            app:layout_constraintTop_toBottomOf="@id/timerValue"
+            app:layout_constraintLeft_toRightOf="@id/minutesSecondDownButton"
+            app:layout_constraintRight_toLeftOf="@id/secondsSecondDownButton"
+            />
+
+        <ImageView
+            android:id="@+id/secondsSecondDownButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_arrow_down"
+            app:layout_constraintTop_toBottomOf="@id/timerValue"
+            app:layout_constraintLeft_toRightOf="@id/secondsFirstDownButton"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <Button

@@ -7,13 +7,17 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import com.denisardent.pomodorotimer.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private val anHour = 3600
 
+    private lateinit var binding: ActivityMainBinding
+    private var remainingTime = 0
     private var isTimerRunning = TIMER_PAUSED
 
     private lateinit var statusReceiver: BroadcastReceiver
@@ -26,12 +30,84 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.mainButton.setOnClickListener {
-            if (isTimerRunning == TIMER_RUNNING) pauseTimer() else startTimer()
+            if (remainingTime==0) showToast(this)
+            else {
+                if(isTimerRunning != TIMER_RUNNING) startTimer() else pauseTimer()
+            }
         }
 
         binding.restartIV.setOnClickListener {
+            remainingTime = 0
             resetTimer()
             binding.mainButton.visibility = View.VISIBLE
+        }
+
+        binding.minutesFirstUpButton.setOnClickListener{
+            if (remainingTime+600<anHour) {
+                remainingTime += 600
+                updateTimerUI(remainingTime)
+                updateButtonsUI(isTimerRunning)
+            }
+            else showToast(this)
+        }
+
+        binding.minutesSecondUpButton.setOnClickListener{
+            if (remainingTime+60<anHour) {
+                remainingTime += 60
+                updateTimerUI(remainingTime)
+                updateButtonsUI(isTimerRunning)
+            }
+            else showToast(this)
+        }
+
+        binding.secondsFirstUpButton.setOnClickListener{
+            if (remainingTime+10<anHour) {
+                remainingTime += 10
+                updateTimerUI(remainingTime)
+                updateButtonsUI(isTimerRunning)
+            }
+            else showToast(this)
+        }
+
+        binding.secondsSecondUpButton.setOnClickListener{
+            if (remainingTime+1<anHour) {
+                remainingTime += 1
+                updateTimerUI(remainingTime)
+                updateButtonsUI(isTimerRunning)
+            }
+            else showToast(this)
+        }
+
+        binding.minutesFirstDownButton.setOnClickListener{
+            if (remainingTime-600>0) {
+                remainingTime -= 600
+                updateTimerUI(remainingTime)
+            }
+            else showToast(this)
+        }
+
+        binding.minutesSecondDownButton.setOnClickListener{
+            if (remainingTime-60>0) {
+                remainingTime -= 60
+                updateTimerUI(remainingTime)
+            }
+            else showToast(this)
+        }
+
+        binding.secondsFirstDownButton.setOnClickListener{
+            if (remainingTime-10>0) {
+                remainingTime -= 10
+                updateTimerUI(remainingTime)
+            }
+            else showToast(this)
+        }
+
+        binding.secondsSecondDownButton.setOnClickListener{
+            if (remainingTime-1>0) {
+                remainingTime -= 1
+                updateTimerUI(remainingTime)
+            }
+            else showToast(this)
         }
     }
 
@@ -52,10 +128,10 @@ class MainActivity : AppCompatActivity() {
             override fun onReceive(p0: Context?, p1: Intent?) {
                 val isRunning = p1?.getStringExtra(TimerService.IS_TIMER_RUNNING)!!
                 isTimerRunning = isRunning
-                val timeElapsed = p1.getIntExtra(TimerService.REMAINING_TIME, 0)
+                remainingTime = p1.getIntExtra(TimerService.REMAINING_TIME, 0)
 
                 updateButtonsUI(isTimerRunning)
-                updateTimerUI(timeElapsed)
+                updateTimerUI(remainingTime)
             }
         }
         registerReceiver(statusReceiver, statusFilter)
@@ -64,7 +140,7 @@ class MainActivity : AppCompatActivity() {
         timeFilter.addAction(TimerService.TIMER_TICK)
         timeReceiver = object : BroadcastReceiver() {
             override fun onReceive(p0: Context?, p1: Intent?) {
-                val remainingTime = p1?.getIntExtra(TimerService.REMAINING_TIME, 0)!!
+                remainingTime = p1?.getIntExtra(TimerService.REMAINING_TIME, 0)!!
                 updateTimerUI(remainingTime)
             }
         }
@@ -80,6 +156,8 @@ class MainActivity : AppCompatActivity() {
         moveToForeground()
     }
 
+    private fun showToast(context: Context){Toast.makeText(context, "Incorrect Value", Toast.LENGTH_SHORT).show() }
+
     private fun updateTimerUI(remainingTime: Int) {
         val minutes: Int = remainingTime / 60
         val seconds: Int = remainingTime % 60
@@ -92,15 +170,21 @@ class MainActivity : AppCompatActivity() {
             TIMER_RUNNING -> {
                 binding.mainButton.text = getString(R.string.main_button_pause)
                 binding.restartIV.visibility = View.INVISIBLE
+                binding.upButtons.visibility = View.INVISIBLE
+                binding.downButtons.visibility = View.INVISIBLE
             }
             TIMER_PAUSED ->{
                 binding.mainButton.text = getString(R.string.main_button_start)
                 binding.restartIV.visibility = View.VISIBLE
+                binding.upButtons.visibility = View.VISIBLE
+                binding.downButtons.visibility = View.VISIBLE
             }
             else -> {
-                binding.mainButton.visibility = View.INVISIBLE
+                binding.mainButton.text = getString(R.string.main_button_start)
                 binding.restartIV.visibility = View.VISIBLE
-            }
+                binding.upButtons.visibility = View.VISIBLE
+                binding.downButtons.visibility = View.VISIBLE
+                }
         }
     }
 
@@ -113,6 +197,7 @@ class MainActivity : AppCompatActivity() {
     private fun startTimer() {
         val timerService = Intent(this, TimerService::class.java)
         timerService.putExtra(TimerService.TIMER_ACTION, TimerService.START)
+        timerService.putExtra(TimerService.REMAINING_TIME, remainingTime)
         startService(timerService)
     }
 
@@ -144,4 +229,5 @@ class MainActivity : AppCompatActivity() {
             TimerService.MOVE_TO_BACKGROUND
         )
         startService(timerService)
-    }}
+        }
+}
