@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.constraintlayout.widget.Group
 import com.denisardent.pomodorotimer.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -29,6 +30,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val upButtons = binding.upButtons
+        val downButtons = binding.downButtons
+
         binding.mainButton.setOnClickListener {
             if (remainingTime==0) showToast(this)
             else {
@@ -36,78 +40,47 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
         binding.restartIV.setOnClickListener {
             remainingTime = 0
             resetTimer()
             binding.mainButton.visibility = View.VISIBLE
         }
 
-        binding.minutesFirstUpButton.setOnClickListener{
-            if (remainingTime+600<anHour) {
-                remainingTime += 600
-                updateTimerUI(remainingTime)
-                updateButtonsUI(isTimerRunning)
+        binding.upButtons.referencedIds.forEach { id ->
+            findViewById<View>(id).setOnClickListener{
+                var totalTime = remainingTime
+                when (it.id){
+                    binding.minutesFirstUpButton.id -> totalTime += 600
+                    binding.minutesSecondUpButton.id -> totalTime += 60
+                    binding.secondsFirstUpButton.id -> totalTime += 10
+                    binding.secondsSecondUpButton.id -> totalTime += 1
+                }
+                if (totalTime<=anHour){
+                    remainingTime = totalTime
+                    updateTimerUI(remainingTime)
+                    updateButtonsUI(isTimerRunning)
+                }
+                else showToast(this)
             }
-            else showToast(this)
         }
 
-        binding.minutesSecondUpButton.setOnClickListener{
-            if (remainingTime+60<anHour) {
-                remainingTime += 60
-                updateTimerUI(remainingTime)
-                updateButtonsUI(isTimerRunning)
+        binding.downButtons.referencedIds.forEach { id ->
+            findViewById<View>(id).setOnClickListener{
+                var totalTime = remainingTime
+                when (it.id){
+                    binding.minutesFirstDownButton.id -> totalTime -= 600
+                    binding.minutesSecondDownButton.id -> totalTime -= 60
+                    binding.secondsFirstDownButton.id -> totalTime -= 10
+                    binding.secondsSecondDownButton.id -> totalTime -= 1
+                }
+                if (totalTime>=0){
+                    remainingTime = totalTime
+                    updateTimerUI(remainingTime)
+                    updateButtonsUI(isTimerRunning)
+                }
+                else showToast(this)
             }
-            else showToast(this)
-        }
-
-        binding.secondsFirstUpButton.setOnClickListener{
-            if (remainingTime+10<anHour) {
-                remainingTime += 10
-                updateTimerUI(remainingTime)
-                updateButtonsUI(isTimerRunning)
-            }
-            else showToast(this)
-        }
-
-        binding.secondsSecondUpButton.setOnClickListener{
-            if (remainingTime+1<anHour) {
-                remainingTime += 1
-                updateTimerUI(remainingTime)
-                updateButtonsUI(isTimerRunning)
-            }
-            else showToast(this)
-        }
-
-        binding.minutesFirstDownButton.setOnClickListener{
-            if (remainingTime-600>0) {
-                remainingTime -= 600
-                updateTimerUI(remainingTime)
-            }
-            else showToast(this)
-        }
-
-        binding.minutesSecondDownButton.setOnClickListener{
-            if (remainingTime-60>0) {
-                remainingTime -= 60
-                updateTimerUI(remainingTime)
-            }
-            else showToast(this)
-        }
-
-        binding.secondsFirstDownButton.setOnClickListener{
-            if (remainingTime-10>0) {
-                remainingTime -= 10
-                updateTimerUI(remainingTime)
-            }
-            else showToast(this)
-        }
-
-        binding.secondsSecondDownButton.setOnClickListener{
-            if (remainingTime-1>0) {
-                remainingTime -= 1
-                updateTimerUI(remainingTime)
-            }
-            else showToast(this)
         }
     }
 
@@ -173,12 +146,6 @@ class MainActivity : AppCompatActivity() {
                 binding.upButtons.visibility = View.INVISIBLE
                 binding.downButtons.visibility = View.INVISIBLE
             }
-            TIMER_PAUSED ->{
-                binding.mainButton.text = getString(R.string.main_button_start)
-                binding.restartIV.visibility = View.VISIBLE
-                binding.upButtons.visibility = View.VISIBLE
-                binding.downButtons.visibility = View.VISIBLE
-            }
             else -> {
                 binding.mainButton.text = getString(R.string.main_button_start)
                 binding.restartIV.visibility = View.VISIBLE
@@ -229,5 +196,5 @@ class MainActivity : AppCompatActivity() {
             TimerService.MOVE_TO_BACKGROUND
         )
         startService(timerService)
-        }
+    }
 }
