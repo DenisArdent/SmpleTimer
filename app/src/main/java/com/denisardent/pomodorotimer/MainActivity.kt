@@ -30,11 +30,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val upButtons = binding.upButtons
-        val downButtons = binding.downButtons
-
         binding.mainButton.setOnClickListener {
-            if (remainingTime==0) showToast(this)
+            if (remainingTime==0) showToast(this, "Incorrect time value")
             else {
                 if(isTimerRunning != TIMER_RUNNING) startTimer() else pauseTimer()
             }
@@ -61,7 +58,6 @@ class MainActivity : AppCompatActivity() {
                     updateTimerUI(remainingTime)
                     updateButtonsUI(isTimerRunning)
                 }
-                else showToast(this)
             }
         }
 
@@ -79,7 +75,6 @@ class MainActivity : AppCompatActivity() {
                     updateTimerUI(remainingTime)
                     updateButtonsUI(isTimerRunning)
                 }
-                else showToast(this)
             }
         }
     }
@@ -129,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         moveToForeground()
     }
 
-    private fun showToast(context: Context){Toast.makeText(context, "Incorrect Value", Toast.LENGTH_SHORT).show() }
+    private fun showToast(context: Context, text: String){Toast.makeText(context, text, Toast.LENGTH_SHORT).show() }
 
     private fun updateTimerUI(remainingTime: Int) {
         val minutes: Int = remainingTime / 60
@@ -139,20 +134,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateButtonsUI(isTimerRunning: String) {
-        when (isTimerRunning) {
-            TIMER_RUNNING -> {
+        if (isTimerRunning!= TIMER_ENDED) {
+            binding.upButtons.visibility = View.INVISIBLE
+            binding.downButtons.visibility = View.INVISIBLE
+        }else{
+            binding.upButtons.visibility = View.VISIBLE
+            binding.downButtons.visibility = View.VISIBLE
+        }
+        if (isTimerRunning == TIMER_RUNNING) {
                 binding.mainButton.text = getString(R.string.main_button_pause)
                 binding.restartIV.visibility = View.INVISIBLE
                 binding.upButtons.visibility = View.INVISIBLE
                 binding.downButtons.visibility = View.INVISIBLE
-            }
-            else -> {
+            } else {
                 binding.mainButton.text = getString(R.string.main_button_start)
                 binding.restartIV.visibility = View.VISIBLE
-                binding.upButtons.visibility = View.VISIBLE
-                binding.downButtons.visibility = View.VISIBLE
-                }
-        }
+            }
     }
 
     private fun getTimerStatus() {
@@ -176,7 +173,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun resetTimer() {
         val timerService = Intent(this, TimerService::class.java)
-        timerService.putExtra(TimerService.TIMER_ACTION, TimerService.RESET)
+        timerService.putExtra(TimerService.TIMER_ACTION, TimerService.ENDED)
         startService(timerService)
     }
 
