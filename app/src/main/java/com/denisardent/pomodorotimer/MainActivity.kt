@@ -176,7 +176,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun resetTimer() {
         val timerService = Intent(this, TimerService::class.java)
-        timerService.putExtra(TimerService.TIMER_ACTION, TimerService.RESET)
+        timerService.putExtra(TimerService.TIMER_ACTION, TimerService.ENDED)
         startService(timerService)
     }
 

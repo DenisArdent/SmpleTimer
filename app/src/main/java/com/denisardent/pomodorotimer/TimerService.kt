@@ -16,7 +16,7 @@ const val TIMER_ENDED = "TIMER_ENDED"
 
 class TimerService : Service() {
     private var remainingTime = 0
-    private var isTimerRunning = TIMER_PAUSED
+    private var isTimerRunning = TIMER_ENDED
 
     private var updateTimer = Timer()
     private var pomoTimer = Timer()
@@ -105,7 +105,7 @@ class TimerService : Service() {
         sendStatus()
     }
 
-    // Создание канала для создания уведомлений
+    // Создание канала для уведомлений
     private fun createChannel(){
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
             val notificationChannel = NotificationChannel(
@@ -113,6 +113,7 @@ class TimerService : Service() {
                 "PomoTimer",
                 NotificationManager.IMPORTANCE_DEFAULT
             )
+//            notificationChannel.vibrationPattern = longArrayOf(1000,1000,1000)
             notificationChannel.setSound(null,null)
             notificationChannel.setShowBadge(true)
             val notificationManager = getSystemService(NotificationManager::class.java)
@@ -161,7 +162,7 @@ class TimerService : Service() {
     }
 
     private fun moveToForeground(){
-        if (isTimerRunning== TIMER_RUNNING){
+        if (isTimerRunning == TIMER_RUNNING || isTimerRunning == TIMER_PAUSED){
             startForeground(1,buildNotification())
 
             updateTimer = Timer()

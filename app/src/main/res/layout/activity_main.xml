@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sea_foam_color"
+    android:background="@color/light_blue"
     tools:context=".MainActivity">
 
     <ImageView
@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/good_times_rg"
         android:textStyle = "bold"
+        android:textColor="@color/black"
         android:textSize="20sp"
         android:text="@string/app_name"
         app:layout_constraintEnd_toEndOf="@id/timerIcon"
@@ -107,7 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="40sp"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:fontFamily="@font/bruce_forever_regular"
             android:text="00:00"
             tools:ignore="HardcodedText"
@@ -173,7 +174,8 @@
         android:layout_height="wrap_content"
         android:textSize="24sp"
         android:layout_marginBottom="96dp"
-        android:backgroundTint = "@color/light_blue"
+        android:textColor="@color/white"
+        android:backgroundTint = "@color/lavanda_color"
         android:text="@string/main_button_start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
