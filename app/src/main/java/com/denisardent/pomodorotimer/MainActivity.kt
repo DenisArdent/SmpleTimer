@@ -144,8 +144,6 @@ class MainActivity : AppCompatActivity() {
         if (isTimerRunning == TIMER_RUNNING) {
                 binding.mainButton.text = getString(R.string.main_button_pause)
                 binding.restartIV.visibility = View.INVISIBLE
-                binding.upButtons.visibility = View.INVISIBLE
-                binding.downButtons.visibility = View.INVISIBLE
             } else {
                 binding.mainButton.text = getString(R.string.main_button_start)
                 binding.restartIV.visibility = View.VISIBLE
